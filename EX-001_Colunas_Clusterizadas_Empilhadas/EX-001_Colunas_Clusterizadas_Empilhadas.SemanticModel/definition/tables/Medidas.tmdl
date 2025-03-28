@@ -1,0 +1,35 @@
+table Medidas
+	lineageTag: 9508bb72-b659-419a-8736-df9d1277791c
+
+	measure 'Total Vendas' = ```
+			SUM(fVendas[Vendas]) 
+			```
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 89e1a27f-4889-4d0a-96cd-2df4ad9ebe5d
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Meta = ```
+			SUM(fMetas[Meta]) 
+			```
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 99d2e82b-863a-4735-b30f-1c464757d5fd
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column Value
+		isHidden
+		formatString: 0
+		lineageTag: 5379e32f-80f5-4119-a960-657ddcff6db3
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Value]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas = calculated
+		mode: import
+		source = {1}
+
+	annotation PBI_Id = e1a5c30e634648bc9f77f54595164a2e
+

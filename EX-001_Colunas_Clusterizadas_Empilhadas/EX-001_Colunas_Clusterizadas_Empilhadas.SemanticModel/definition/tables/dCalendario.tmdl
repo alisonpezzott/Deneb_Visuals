@@ -1,0 +1,88 @@
+table dCalendario
+	lineageTag: f9f3025d-17b1-4d5e-9060-1b1576debd7a
+	dataCategory: Time
+
+	column Data
+		dataType: dateTime
+		isKey
+		formatString: Short Date
+		lineageTag: 69d8690e-a83e-4458-b6eb-81866c3aa68b
+		summarizeBy: none
+		sourceColumn: Data
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column MesNum
+		dataType: int64
+		formatString: 0
+		lineageTag: 6506a9fd-a1ad-4b90-ad4e-1d6923e36732
+		summarizeBy: none
+		sourceColumn: MesNum
+
+		annotation SummarizationSetBy = User
+
+	column Mes
+		dataType: string
+		lineageTag: 1be64d7c-2808-48b1-a83a-568532625475
+		summarizeBy: none
+		sourceColumn: Mes
+		sortByColumn: MesNum
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ano
+		dataType: int64
+		formatString: 0
+		lineageTag: 4c808822-2328-45dc-812b-9a23e3525b23
+		summarizeBy: none
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = User
+
+	column MesDeneb
+		dataType: string
+		lineageTag: 551bfcef-10e0-4d68-add5-6991305c1918
+		summarizeBy: none
+		sourceColumn: MesDeneb
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dCalendario = m
+		mode: import
+		source =
+				let
+				    DataInicial = #date(2024, 1, 1),
+				    DataFinal = #date(2024, 12, 31),
+				    QtdDias = Duration.Days(DataFinal - DataInicial) + 1,
+				    Datas = List.Dates(DataInicial, QtdDias, #duration(1, 0, 0, 0)),
+				    Calendario = #table(
+				        type table [
+				            Data = date,
+				            MesNum = Int64.Type,
+				            Mes = text,
+				            Ano = Int64.Type,
+				            MesDeneb = text
+				        ],
+				        List.Transform(
+				            Datas,
+				            each {
+				                _,
+				                Date.Month(_),
+				                Text.Proper(Date.ToText(_,[Format="MMM", Culture="pt-BR"])),
+				                Date.Year(_),
+				                Text.PadStart(Text.From(Date.Month(_)), 2, "0")
+				                    & " - " & Text.Proper(Date.ToText(_,[Format="MMM", Culture="pt-BR"]))
+				            }
+				        )
+				    )
+				in
+				    Calendario
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

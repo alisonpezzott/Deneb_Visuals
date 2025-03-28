@@ -1,0 +1,53 @@
+table fVendas
+	lineageTag: c7a1c1b8-fc01-4b4a-9186-4a38eebb9406
+
+	column Categoria
+		dataType: string
+		lineageTag: 94cf3cc9-d86e-475a-872d-ce795d332dfb
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column Data
+		dataType: dateTime
+		isHidden
+		formatString: Short Date
+		lineageTag: e28d2ac3-ad11-4a10-b88d-ec7bee5c6652
+		summarizeBy: none
+		sourceColumn: Data
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Vendas
+		dataType: decimal
+		isHidden
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 12bfd18f-3f7f-46b6-94c0-05351e8fe96c
+		summarizeBy: sum
+		sourceColumn: Vendas
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition fVendas = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("XY89DsIwDEbvkrlDbMeJPXIDBraqQ4U6gKCRSm/EwEF6MfIHVAzR07OdfHHfm8MtnsfttT2j6Qw4YU5EUrDZyRYHbnTY6CvJ1XkXyjwS13se2zvVESBx6HpzWqbLPN6neS15qiG3VVuMBp8oJMElBhVJYFDEn3pSW7okotmDaK4TKOO3nsOOS7xOa3zUTVyOSIsR77z8zlvd83/m47ad6sPwBg==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Categoria = _t, #"01/01/2024" = _t, #"01/02/2024" = _t, #"01/03/2024" = _t, #"01/04/2024" = _t, #"01/05/2024" = _t, #"01/06/2024" = _t, #"01/07/2024" = _t, #"01/08/2024" = _t, #"01/09/2024" = _t, #"01/10/2024" = _t, #"01/11/2024" = _t, #"01/12/2024" = _t]),
+				    Unpivot = Table.UnpivotOtherColumns(Fonte, {"Categoria"}, "Data", "Vendas"),
+				    TipoAlterado = Table.TransformColumnTypes(Unpivot,{{"Data", type date}, {"Vendas", Currency.Type}})
+				in
+				    TipoAlterado
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

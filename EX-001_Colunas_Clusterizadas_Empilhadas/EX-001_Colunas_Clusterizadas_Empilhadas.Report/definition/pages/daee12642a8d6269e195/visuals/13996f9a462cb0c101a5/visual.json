@@ -1,0 +1,247 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.5.0/schema.json",
+  "name": "13996f9a462cb0c101a5",
+  "position": {
+    "x": 64,
+    "y": 64,
+    "z": 0,
+    "height": 592,
+    "width": 1152,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "deneb7E15AEF80B9E4D4F8E12924291ECE89A",
+    "query": {
+      "queryState": {
+        "dataset": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dCalendario"
+                    }
+                  },
+                  "Property": "Mes"
+                }
+              },
+              "queryRef": "dCalendario.Mes",
+              "nativeQueryRef": "Mes"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dCalendario"
+                    }
+                  },
+                  "Property": "MesDeneb"
+                }
+              },
+              "queryRef": "dCalendario.MesDeneb",
+              "nativeQueryRef": "MesDeneb"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Meta"
+                }
+              },
+              "queryRef": "Medidas.Meta",
+              "nativeQueryRef": "Meta"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Medidas"
+                    }
+                  },
+                  "Property": "Total Vendas"
+                }
+              },
+              "queryRef": "Medidas.Total Vendas",
+              "nativeQueryRef": "Total Vendas"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fVendas"
+                    }
+                  },
+                  "Property": "Categoria"
+                }
+              },
+              "queryRef": "fVendas.Categoria",
+              "nativeQueryRef": "Categoria"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "stateManagement": [
+        {
+          "properties": {
+            "viewportHeight": {
+              "expr": {
+                "Literal": {
+                  "Value": "528.1999988555908D"
+                }
+              }
+            },
+            "viewportWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "1118D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "vega": [
+        {
+          "properties": {
+            "provider": {
+              "expr": {
+                "Literal": {
+                  "Value": "'vegaLite'"
+                }
+              }
+            },
+            "jsonSpec": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\n  \"$schema\": \"https://vega.github.io/schema/vega-lite/v5.json\",\n  \"data\": { \"name\": \"dataset\" },\n  \n  // Adiciona padding em todo o visual\n  \"padding\": {\n    \"top\": 32,\n    \"bottom\": 42,\n    \"left\": 32,\n    \"right\": 32\n  },\n\n  // Elimina a linha de contorno\n  \"view\": { \"strokeOpacity\": 0 },\n\n  // Unifica a legenda de cor das duas camadas\n  \"resolve\": {\n    \"legend\": {\n      \"color\": \"merge\"\n    }\n  },\n\n  \"layer\": [\n    {\n      \n      // Camada: Meta\n      \"transform\": [\n        {\n          \"aggregate\": [\n            { \"op\": \"max\", \"field\": \"Meta\", \"as\": \"Value\" }\n          ],\n          \"groupby\": [\"MesDeneb\", \"Mes\"]\n        },\n        {\n          \"calculate\": \"''Meta''\",\n          \"as\": \"Tipo\"\n        }\n      ],\n      \"mark\": {\n        \"type\": \"bar\",\n        \"cornerRadiusTopLeft\": 4, // Cantos superiores arredondados\n        \"cornerRadiusTopRight\": 4\n      },\n      \"encoding\": {\n        \"x\": {\n          \"field\": \"MesDeneb\", \n          \"type\": \"ordinal\",\n          \"sort\": \"ascending\",\n          \"axis\": {\n            \"tickColor\": \"#FFF\",\n            \"title\": null,\n            \"labelFontStyle\": \"Segoe UI\",\n            \"orient\": \"bottom\",\n            \"domainWidth\": { \"expr\": \"0.5\" },\n            \"labelColor\": \"#4C566A\",\n            \"labelAngle\": 0,\n            \"labelFontSize\": 12,\n            \"labelExpr\": \"split(datum.label, '' - '')[1]\"\n          }\n        },\n        \"xOffset\": {\n          \"field\": \"Tipo\",\n          \"type\": \"nominal\"\n        },\n        \"y\": {\n          \"field\": \"Value\",\n          \"type\": \"quantitative\",\n          \"axis\": {\n            \"grid\": true, \n            \"gridColor\": \"#D8DEE9\", \n            \"gridWidth\": { \"expr\": \"0.4\"},\n            \"title\": \"Em reais R$\",\n            \"titleFontStyle\": \"Segoe UI Light\",\n            \"titleColor\": \"#4C566A\",\n            \"titleFontSize\": 10,\n            \"titleBaseline\": \"line-bottom\",\n            \"titleAlign\": \"left\",\n            \"titleAnchor\": \"start\",\n            \"ticks\": true,\n            \"tickOffset\": { \"expr\": \"0\" }, \n            \"tickColor\": \"#FFF\", \n            \"domain\": true,\n            \"domainWidth\": { \"expr\": \"0.1\" },\n            \"labelFontStyle\": \"Segoe UI\",\n            \"labelFontSize\": 11,\n            \"labelColor\": \"#4C566A\"\n          }\n        },\n\n        // A cor da \"Meta\" usa o mesmo domain/range das categorias,\n        // mas sem exibir legenda nessa camada (legend: null)\n        \"color\": {\n          \"field\": \"Tipo\",\n          \"type\": \"nominal\",\n          \"scale\": {\n            \"domain\": [\"Meta\", \"Alocação\", \"Projetos\", \"Treinamento\"],\n            \"range\": [\"#D8DEE9\", \"#81A1C1\", \"#5E81AC\", \"#88C0D0\"]\n          },\n          \"legend\": null\n        },\n\n        \"tooltip\": [\n          { \"field\": \"Mes\", \"title\": \"Mês\", \"type\": \"nominal\" },\n          { \"field\": \"Value\", \"title\": \"Meta\", \"type\": \"quantitative\", \"format\": \"$,.2f\" }\n        ]\n      }\n    },\n    {\n      // Camada: Total Vendas por Categoria\n      \"transform\": [\n        {\n          \"calculate\": \"''Total Vendas''\",\n          \"as\": \"Tipo\"\n        },\n        {\n          \"joinaggregate\": [\n            {\n              \"op\": \"sum\",\n              \"field\": \"Total Vendas\",\n              \"as\": \"TotalVendasCategoria\"\n            }\n          ],\n          \"groupby\": [\"Categoria\"]\n        },\n        {\n          \"window\": [\n            { \"op\": \"rank\", \"as\": \"OrdemCategoria\" }\n          ],\n          \"sort\": [\n            { \"field\": \"TotalVendasCategoria\", \"order\": \"descending\" }\n          ]\n        }\n      ],\n      \"mark\": {\n        \"type\": \"bar\",\n        \"cornerRadiusTopLeft\": 4,\n        \"cornerRadiusTopRight\": 4\n      },\n      \"encoding\": {\n        \"x\": {\n          \"field\": \"MesDeneb\",\n          \"type\": \"ordinal\"\n        },\n        \"xOffset\": {\n          \"field\": \"Tipo\",\n          \"type\": \"nominal\"\n        },\n        \"y\": {\n          \"field\": \"Total Vendas\",\n          \"type\": \"quantitative\",\n          \"stack\": \"zero\"\n        },\n\n        // Mesma escala de cor, mas com legenda\n        \"color\": {\n          \"field\": \"Categoria\",\n          \"type\": \"nominal\",\n          \"scale\": {\n            \"domain\": [\"Meta\", \"Alocação\", \"Projetos\", \"Treinamento\"],\n            \"range\": [\"#D8DEE9\", \"#81A1C1\", \"#5E81AC\", \"#88C0D0\"]\n          },\n          \"legend\": {\n            \"title\": null,\n            \"orient\": \"none\",\n            \"legendX\": 320,\n            \"legendY\": 470,\n            \"direction\": \"horizontal\",\n            \"labelAlign\": \"left\",\n            \"titleColor\": \"#4C566A\",\n            \"titleFontStyle\": \"Segoe UI\",\n            \"titleFontSize\": 12,\n            \"labelColor\": \"#4C566A\",\n            \"labelFontStyle\": \"Segoe UI\",\n            \"labelFontSize\": 12\n          }\n        },\n\n        \"order\": {\n          \"field\": \"OrdemCategoria\",\n          \"type\": \"quantitative\"\n        },\n        \"tooltip\": [\n          { \"field\": \"Mes\", \"title\": \"Mês\",\"type\": \"nominal\" },\n          { \"field\": \"Categoria\", \"type\": \"nominal\" },\n          { \"field\": \"Total Vendas\", \"type\": \"quantitative\", \"format\": \"$,.2f\" }\n        ]\n      }\n    }\n  ]\n}'"
+                }
+              }
+            },
+            "jsonConfig": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{}'"
+                }
+              }
+            },
+            "isNewDialogOpen": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "enableTooltips": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "enableContextMenu": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "enableHighlight": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "enableSelection": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "selectionMaxDataPoints": {
+              "expr": {
+                "Literal": {
+                  "Value": "50D"
+                }
+              }
+            },
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'5.20.1'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "developer": [
+        {
+          "properties": {
+            "version": {
+              "expr": {
+                "Literal": {
+                  "Value": "'1.7.2.1'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Vendas x Meta por Mês'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "14D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Million US$'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

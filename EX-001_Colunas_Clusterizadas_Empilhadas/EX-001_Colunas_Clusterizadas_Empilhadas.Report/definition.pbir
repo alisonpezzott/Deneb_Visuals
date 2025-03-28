@@ -1,0 +1,8 @@
+{
+  "version": "4.0",
+  "datasetReference": {
+    "byPath": {
+      "path": "../EX-001_Colunas_Clusterizadas_Empilhadas.SemanticModel"
+    }
+  }
+}

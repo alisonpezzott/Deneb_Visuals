@@ -1,0 +1,8 @@
+relationship 94c289d3-3724-b85b-64ca-111ba785bedd
+	fromColumn: fMetas.Data
+	toColumn: dCalendario.Data
+
+relationship 38da0be7-1827-9c21-fda1-04ec07311ba8
+	fromColumn: fVendas.Data
+	toColumn: dCalendario.Data
+

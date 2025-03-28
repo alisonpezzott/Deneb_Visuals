@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "EX-001_Colunas_Clusterizadas_Empilhadas"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "210bd183-82dd-4fa2-b279-90d6a7f7bde4"
+  }
+}

@@ -1,0 +1,190 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": { "name": "dataset" },
+    
+    // Adiciona padding em todo o visual
+    "padding": {
+      "top": 32,
+      "bottom": 42,
+      "left": 32,
+      "right": 32
+    },
+  
+    // Elimina a linha de contorno
+    "view": { "strokeOpacity": 0 },
+  
+    // Unifica a legenda de cor das duas camadas
+    "resolve": {
+      "legend": {
+        "color": "merge"
+      }
+    },
+  
+    "layer": [
+      {
+        
+        // Camada: Meta
+        "transform": [
+          {
+            "aggregate": [
+              { "op": "max", "field": "Meta", "as": "Value" }
+            ],
+            "groupby": ["MesDeneb", "Mes"]
+          },
+          {
+            "calculate": "'Meta'",
+            "as": "Tipo"
+          }
+        ],
+        "mark": {
+          "type": "bar",
+          "cornerRadiusTopLeft": 4, // Cantos superiores arredondados
+          "cornerRadiusTopRight": 4
+        },
+        "encoding": {
+          "x": {
+            "field": "MesDeneb", 
+            "type": "ordinal",
+            "sort": "ascending",
+            "axis": {
+              "tickColor": "#FFF",
+              "title": null,
+              "labelFontStyle": "Segoe UI",
+              "orient": "bottom",
+              "domainWidth": { "expr": "0.5" },
+              "labelColor": "#4C566A",
+              "labelAngle": 0,
+              "labelFontSize": 12,
+              "labelExpr": "split(datum.label, ' - ')[1]"
+            }
+          },
+          "xOffset": {
+            "field": "Tipo",
+            "type": "nominal"
+          },
+          "y": {
+            "field": "Value",
+            "type": "quantitative",
+            "axis": {
+              "grid": true, 
+              "gridColor": "#D8DEE9", 
+              "gridWidth": { "expr": "0.4"},
+              "title": "Em reais R$",
+              "titleFontStyle": "Segoe UI Light",
+              "titleColor": "#4C566A",
+              "titleFontSize": 10,
+              "titleBaseline": "line-bottom",
+              "titleAlign": "left",
+              "titleAnchor": "start",
+              "ticks": true,
+              "tickOffset": { "expr": "0" }, 
+              "tickColor": "#FFF", 
+              "domain": true,
+              "domainWidth": { "expr": "0.1" },
+              "labelFontStyle": "Segoe UI",
+              "labelFontSize": 11,
+              "labelColor": "#4C566A"
+            }
+          },
+  
+          // A cor da "Meta" usa o mesmo domain/range das categorias,
+          // mas sem exibir legenda nessa camada (legend: null)
+          "color": {
+            "field": "Tipo",
+            "type": "nominal",
+            "scale": {
+              "domain": ["Meta", "Alocação", "Projetos", "Treinamento"],
+              "range": ["#D8DEE9", "#81A1C1", "#5E81AC", "#88C0D0"]
+            },
+            "legend": null
+          },
+  
+          "tooltip": [
+            { "field": "Mes", "title": "Mês", "type": "nominal" },
+            { "field": "Value", "title": "Meta", "type": "quantitative", "format": "$,.2f" }
+          ]
+        }
+      },
+      {
+        // Camada: Total Vendas por Categoria
+        "transform": [
+          {
+            "calculate": "'Total Vendas'",
+            "as": "Tipo"
+          },
+          {
+            "joinaggregate": [
+              {
+                "op": "sum",
+                "field": "Total Vendas",
+                "as": "TotalVendasCategoria"
+              }
+            ],
+            "groupby": ["Categoria"]
+          },
+          {
+            "window": [
+              { "op": "rank", "as": "OrdemCategoria" }
+            ],
+            "sort": [
+              { "field": "TotalVendasCategoria", "order": "descending" }
+            ]
+          }
+        ],
+        "mark": {
+          "type": "bar",
+          "cornerRadiusTopLeft": 4,
+          "cornerRadiusTopRight": 4
+        },
+        "encoding": {
+          "x": {
+            "field": "MesDeneb",
+            "type": "ordinal"
+          },
+          "xOffset": {
+            "field": "Tipo",
+            "type": "nominal"
+          },
+          "y": {
+            "field": "Total Vendas",
+            "type": "quantitative",
+            "stack": "zero"
+          },
+  
+          // Mesma escala de cor, mas com legenda
+          "color": {
+            "field": "Categoria",
+            "type": "nominal",
+            "scale": {
+              "domain": ["Meta", "Alocação", "Projetos", "Treinamento"],
+              "range": ["#D8DEE9", "#81A1C1", "#5E81AC", "#88C0D0"]
+            },
+            "legend": {
+              "title": null,
+              "orient": "none",
+              "legendX": 320,
+              "legendY": 470,
+              "direction": "horizontal",
+              "labelAlign": "left",
+              "titleColor": "#4C566A",
+              "titleFontStyle": "Segoe UI",
+              "titleFontSize": 12,
+              "labelColor": "#4C566A",
+              "labelFontStyle": "Segoe UI",
+              "labelFontSize": 12
+            }
+          },
+  
+          "order": {
+            "field": "OrdemCategoria",
+            "type": "quantitative"
+          },
+          "tooltip": [
+            { "field": "Mes", "title": "Mês","type": "nominal" },
+            { "field": "Categoria", "type": "nominal" },
+            { "field": "Total Vendas", "type": "quantitative", "format": "$,.2f" }
+          ]
+        }
+      }
+    ]
+  }
